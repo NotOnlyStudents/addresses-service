@@ -1,0 +1,63 @@
+{
+  "name": "empriolambda",
+  "version": "0.0.1",
+  "description": "",
+  "scripts": {
+    "start": "serverless offline start",
+    "test": "jest",
+    "deploy": "serverless deploy",
+    "install-db": "serverless dynamodb install",
+    "lint": "eslint . --ext .js,.ts",
+    "lint:fix": "npm run lint -- --fix",
+    "swagger": "swagger-cli bundle openapi.yml --outfile _build/openapi.yml --type yaml",
+    "swagger:validate": "swagger-cli validate docs/openApi/openApi.yml",
+    "swagger:md": "npm run swagger:validate &&  widdershins --language_tabs 'shell:curl' --resolve --expandBody docs/openApi/openApi.yml -o docs/openApi.md"
+  },
+  "devDependencies": {
+    "@serverless/typescript": "^2.16.0",
+    "@shelf/jest-dynamodb": "^1.8.1",
+    "@types/aws-lambda": "^8.10.72",
+    "@types/http-errors": "^1.8.0",
+    "@types/jest": "^26.0.20",
+    "@types/node": "^14.14.28",
+    "@typescript-eslint/eslint-plugin": "^4.19.0",
+    "@typescript-eslint/parser": "^4.16.1",
+    "eslint": "^7.21.0",
+    "eslint-config-airbnb-typescript": "^12.3.1",
+    "eslint-config-airbnb-typescript-prettier": "^4.1.0",
+    "fork-ts-checker-webpack-plugin": "^6.0.0",
+    "http-errors-response-ts": "^1.0.0",
+    "jest": "^26.6.3",
+    "json-schema-to-ts": "^1.4.1",
+    "serverless-domain-manager": "^5.1.0",
+    "serverless-dynamodb-local": "^0.2.39",
+    "serverless-dynamodb-seed": "^0.3.0",
+    "serverless-offline": "^6.8.0",
+    "serverless-webpack": "^5.4.0",
+    "swagger-cli": "^4.0.4",
+    "widdershins": "^4.0.1",
+    "ts-jest": "^26.5.3",
+    "ts-loader": "^8.0.10",
+    "ts-node": "^9.0.0",
+    "tsconfig-paths-webpack-plugin": "^3.3.0",
+    "typescript": "^4.0.7",
+    "webpack": "^5.4.0",
+    "webpack-node-externals": "^2.5.2"
+  },
+  "dependencies": {
+    "@aws/dynamodb-data-mapper": "^0.7.3",
+    "@aws/dynamodb-data-mapper-annotations": "^0.7.3",
+    "@curveball/http-errors": "^0.4.0",
+    "aws-sdk": "^2.846.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NotOnlyStudents/backend.git"
+  },
+  "author": "Not Only Students",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/NotOnlyStudents/backend/issues"
+  },
+  "homepage": "https://github.com/NotOnlyStudents/backend#readme"
+}

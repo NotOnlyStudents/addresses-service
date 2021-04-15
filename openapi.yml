@@ -1,0 +1,32 @@
+openapi: 3.0.3
+info:
+  version: 0.0.1
+  title: EmporioLambda Backend # Domain name
+  description: description
+servers:
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://app.swaggerhub.com/apis/NotOnlyStudents/Backend/0.0.1
+  - description: Local URL base
+    url: http://local:3000/dev
+  - description: Testing URL base
+    url: http://api.annoiato.net/test
+  - description: Testing URL base
+    url: http://api.annoiato.net/staging
+
+# All paths
+paths:
+  {}
+
+components:
+  securitySchemes:
+    oAuth:
+      type: oauth2
+      description: This API uses OAuth2.0 with implicit flow.
+      flows:
+        implicit:
+          authorizationUrl: https://...
+          refreshUrl: https://... # optional: url to obtain refreshed token
+          scopes:
+            read: read for customers and admins
+            write: edit data only for admins

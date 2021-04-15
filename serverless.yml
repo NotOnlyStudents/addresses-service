@@ -1,0 +1,40 @@
+service: name
+
+frameworkVersion: "2"
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  lambdaHashingVersion: 20201221
+
+plugins:
+  - serverless-webpack
+  - serverless-dynamodb-local
+  - serverless-dynamodb-seed
+  - serverless-offline
+
+resources:
+  Resources:
+    ApiGatewayAuthorizer:
+      Type: AWS::ApiGateway::Authorizer
+      Properties:
+        AuthorizerResultTtlInSeconds: 300
+        IdentitySource: method.request.header.Authorization
+        Name: Cognito
+        RestApiId: # API id, ref
+          Type: COGNITO_USER_POOLS
+        ProviderARNs:
+          -  # Cognito ARN
+
+custom:
+  dynamodb:
+    stages:
+      - dev
+    start:
+      port: 8000
+      inMemory: true
+      migrate: true
+      seed: true
+      convertEmptyValues: true
+    migration:
+      dir: ./offline

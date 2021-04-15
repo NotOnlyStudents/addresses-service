@@ -1,0 +1,19 @@
+name: Open API
+
+on:
+  push:
+    branches: [main, develop]
+
+jobs:
+  swagger:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use latest node.js version
+        uses: actions/setup-node@v2.1.5
+        with:
+          check-latest: true
+      - name: Install dependencies
+        run: npm ci
+      - run: npm run swagger:validate
