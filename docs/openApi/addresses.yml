@@ -1,0 +1,80 @@
+get:
+  description: Return the list of all delivery addresses
+  tags:
+    - addresses
+  security:
+    - oAuth:
+      - read
+  responses:
+    '200':
+      description: Successfully get the list of all delivery addresses
+      content: 
+        application/json: 
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: "./schemas/address.yml"
+    '400':
+      description: Bad request, {username} must be a string.
+      content:
+        application/json:
+          schema:
+            $ref : "./schemas/error.yml"
+    '401':
+      description: Authorization information is missing or invalid.
+      content:
+        application/json:
+          schema:
+            $ref : "./schemas/error.yml"
+    '5XX':
+      description: Unexpected error.
+      content:
+        application/json:
+          schema:
+            $ref : "./schemas/error.yml"
+
+post:
+  description: Create a new delivery address belongs to a user
+  tags:
+    - addresses
+  security:
+    - oAuth:
+      - writeUser
+  requestBody:
+    description: Delivery address to create
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: "./schemas/addressCreation.yml"
+  responses:
+    '201':
+      description: Successfully created a new delivery address
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: './schemas/address.yml'
+    '400':
+      description: Bad request.
+      content:
+        application/json:
+          schema:
+            $ref : "./schemas/error.yml"
+    '401':
+      description: Authorization information is missing or invalid.
+      content:
+        application/json:
+          schema:
+            $ref : "./schemas/error.yml"
+    '5XX':
+      description: Unexpected error.
+      content:
+        application/json:
+          schema:
+            $ref : "./schemas/error.yml"

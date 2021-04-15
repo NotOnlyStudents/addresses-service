@@ -1,0 +1,140 @@
+get:
+  description: Get the delivery address with the specified {ID}
+  tags:
+    - addresses
+  security:
+    - oAuth:
+      - read
+  parameters:
+    - $ref: "./parameters/addressId.path.yml"
+  responses:
+    '200': 
+      description: Return the delivery address with the specified {ID}
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: "./schemas/address.yml"
+    '400':
+      description: Bad request, {ID} must be a string.
+      content:
+        application/json:
+          schema:
+            $ref : "./schemas/error.yml"
+    '401':
+      description: Authorization information is missing or invalid.
+      content:
+        application/json:
+          schema:
+            $ref : "./schemas/error.yml"
+    '404':
+      description: A delivery address with the specified {ID} was not found.
+      content:
+        application/json:
+          schema:
+            $ref : "./schemas/error.yml"
+    '5XX':
+      description: Unexpected error.
+      content:
+        application/json:
+          schema:
+            $ref : "./schemas/error.yml"
+
+patch:
+  description: Modify the delivery address with the specified {ID} 
+  tags:
+    - addresses
+  security:
+    - oAuth:
+      - writeUser
+  parameters:
+    - $ref: "./parameters/addressId.path.yml"
+  requestBody:
+    description: Delivery address' fields to be changend
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            nation:
+              type: string
+            city:
+              type: string
+            address:
+              type: string
+            cap:
+              type: number
+  responses:
+    '200': 
+      description: Return the modified delivery address with the specified {ID}
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: "./schemas/address.yml"
+    '400':
+      description: Bad request, {ID} must be a string.
+      content:
+        application/json:
+          schema:
+            $ref : "./schemas/error.yml"
+    '401':
+      description: Authorization information is missing or invalid.
+      content:
+        application/json:
+          schema:
+            $ref : "./schemas/error.yml"
+    '404':
+      description: A delivery address with the specified {ID} was not found.
+      content:
+        application/json:
+          schema:
+            $ref : "./schemas/error.yml"
+    '5XX':
+      description: Unexpected error.
+      content:
+        application/json:
+          schema:
+            $ref : "./schemas/error.yml"
+
+delete:
+  description: delete the delivery address with the specified {ID}
+  tags:
+    - addresses
+  security:
+    - oAuth:
+      - writeUser
+  parameters:
+    - $ref: "./parameters/addressId.path.yml"
+  responses:
+    '200':
+      description: Successfully delete the delivery address with the specified {ID}
+    '400':
+      description: Bad request, {ID} must be a string.
+      content:
+        application/json:
+          schema:
+            $ref : "./schemas/error.yml"
+    '401':
+      description: Authorization information is missing or invalid.
+      content:
+        application/json:
+          schema:
+            $ref : "./schemas/error.yml"
+    '404':
+      description: A delivery address with the specified {ID} was not found.
+      content:
+        application/json:
+          schema:
+            $ref : "./schemas/error.yml"
+    '5XX':
+      description: Unexpected error.
+      content:
+        application/json:
+          schema:
+            $ref : "./schemas/error.yml"
