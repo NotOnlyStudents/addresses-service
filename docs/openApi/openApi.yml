@@ -1,0 +1,45 @@
+openapi: 3.0.3
+info:
+  version: 0.1.0
+  title: EmporioLambda Backend
+  description: REST interfaces for EmporioLambda Backend
+servers:
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://app.swaggerhub.com/apis/NotOnlyStudents/Backend/0.0.1
+  - description: Local URL base
+    url: http://localhost:3000/dev
+  - description: Testing URL base
+    url: http://api.annoiato.net/test
+  - description: Testing URL base
+    url: http://api.annoiato.net/staging
+paths:
+  /addresses:
+    $ref: "./addresses.yml"
+  /addresses/{addressId}:
+    $ref: "./addressesById.yml"
+
+components:
+  securitySchemes:
+    oAuth:
+      type: oauth2
+      description: This API uses OAuth2.0 with implicit flow.
+      flows:
+        implicit:
+          authorizationUrl: https://emporiolambda.auth.eu-west-1.amazoncognito.com/oauth2/authorize
+          refreshUrl: https://emporiolambda.auth.eu-west-1.amazoncognito.com/oauth2/token # optional: url to obtain refreshed token
+          scopes:
+            read: read for customers and admins
+            readAdmin: read only for admins
+            writeUser: edit data only for users
+            writeAdmin: edit data only for admins
+
+tags:
+  - name: products-categories
+    description: The products-categories service
+  - name: payments-orders
+    description: The payments-orders service
+  - name: carts
+    description: The carts service
+  - name: addresses
+    description: The addresses service

@@ -9,7 +9,6 @@
     "install-db": "serverless dynamodb install",
     "lint": "eslint . --ext .js,.ts",
     "lint:fix": "npm run lint -- --fix",
-    "swagger": "swagger-cli bundle openapi.yml --outfile _build/openapi.yml --type yaml",
     "swagger:validate": "swagger-cli validate docs/openApi/openApi.yml",
     "swagger:md": "npm run swagger:validate &&  widdershins --language_tabs 'shell:curl' --resolve --expandBody docs/openApi/openApi.yml -o docs/openApi.md"
   },
@@ -35,14 +34,14 @@
     "serverless-offline": "^6.8.0",
     "serverless-webpack": "^5.4.0",
     "swagger-cli": "^4.0.4",
-    "widdershins": "^4.0.1",
     "ts-jest": "^26.5.3",
     "ts-loader": "^8.0.10",
     "ts-node": "^9.0.0",
     "tsconfig-paths-webpack-plugin": "^3.3.0",
     "typescript": "^4.0.7",
     "webpack": "^5.4.0",
-    "webpack-node-externals": "^2.5.2"
+    "webpack-node-externals": "^2.5.2",
+    "widdershins": "^4.0.1"
   },
   "dependencies": {
     "@aws/dynamodb-data-mapper": "^0.7.3",

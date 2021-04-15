@@ -1,0 +1,18 @@
+type: object
+required:
+  - id
+  - nation
+  - city
+  - address
+  - cap
+properties:
+  id:
+    type: string
+  nation:
+    type: string
+  city:
+    type: string
+  address:
+    type: string
+  cap:
+    type: number
