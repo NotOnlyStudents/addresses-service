@@ -9,6 +9,7 @@ provider:
   stage: ${opt:stage, "dev"}
   lambdaHashingVersion: 20201221
   environment:
+    DYNAMODB_CONFIG_FILE_PATH: configs/${self:provider.stage}-dynamo.yml
     ADDRESS_TABLE_NAME: ${self:provider.stage}-addresses
 
 plugins:
@@ -17,6 +18,16 @@ plugins:
   - serverless-dynamodb-seed
   - serverless-offline
 
+functions:
+  addAddress:
+    handler: src/endpoints/addAddress.default
+    events:
+      - http:
+          path: addresses
+          method: post
+          cors: true
+
+
 resources:
   Resources:
     AddressesTable:
@@ -24,10 +35,10 @@ resources:
       Properties:
         TableName: ${self:provider.environment.ADDRESS_TABLE_NAME}
         AttributeDefinitions:
-          - AttributeName: ownerId
+          - AttributeName: id
             AttributeType: S
         KeySchema:
-          - AttributeName: ownerId
+          - AttributeName: id
             KeyType: HASH
         ProvisionedThroughput:
           ReadCapacityUnits: 5

@@ -3,7 +3,7 @@
         "TableName": "dev-addresses",
         "KeySchema": [
             {
-                "AttributeName": "ownerId",
+                "AttributeName": "id",
                 "KeyType": "HASH"
             }
         ],
