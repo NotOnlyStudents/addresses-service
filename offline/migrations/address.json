@@ -1,17 +1,21 @@
 {
     "Table": {
         "TableName": "dev-addresses",
-        "KeySchema": [{
-            "AttributeName": "ID",
-            "KeyType": "HASH"
-        }],
-        "AttributeDefinitions": [{
-            "AttributeName": "ID",
-            "AttributeType": "S"
-        }],
+        "KeySchema": [
+            {
+                "AttributeName": "ownerId",
+                "KeyType": "HASH"
+            }
+        ],
+        "AttributeDefinitions": [
+            {
+                "AttributeName": "ID",
+                "AttributeType": "S"
+            }
+        ],
         "ProvisionedThroughput": {
             "ReadCapacityUnits": 1,
             "WriteCapacityUnits": 1
-        }          
+        }
     }
 }

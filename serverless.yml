@@ -8,6 +8,8 @@ provider:
   runtime: nodejs12.x
   stage: ${opt:stage, "dev"}
   lambdaHashingVersion: 20201221
+  environment:
+    ADDRESS_TABLE_NAME: ${self:provider.stage}-addresses
 
 plugins:
   - serverless-webpack
@@ -20,12 +22,12 @@ resources:
     AddressesTable:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: ${self:provider.stage}-addresses
+        TableName: ${self:provider.environment.ADDRESS_TABLE_NAME}
         AttributeDefinitions:
-          - AttributeName: ID
+          - AttributeName: ownerId
             AttributeType: S
         KeySchema:
-          - AttributeName: ID
+          - AttributeName: ownerId
             KeyType: HASH
         ProvisionedThroughput:
           ReadCapacityUnits: 5
