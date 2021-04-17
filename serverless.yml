@@ -1,12 +1,10 @@
-service: addresses-service
+service: name
 
 frameworkVersion: "2"
 
 provider:
   name: aws
-  region: eu-west-1
   runtime: nodejs12.x
-  stage: ${opt:stage, "dev"}
   lambdaHashingVersion: 20201221
 
 plugins:
@@ -17,20 +15,17 @@ plugins:
 
 resources:
   Resources:
-    AddressesTable:
-      Type: AWS::DynamoDB::Table
+    ApiGatewayAuthorizer:
+      Type: AWS::ApiGateway::Authorizer
       Properties:
-        TableName: ${self:provider.stage}-addresses
-        AttributeDefinitions:
-          - AttributeName: ID
-            AttributeType: S
-        KeySchema:
-          - AttributeName: ID
-            KeyType: HASH
-        ProvisionedThroughput:
-          ReadCapacityUnits: 5
-          WriteCapacityUnits: 5
-         
+        AuthorizerResultTtlInSeconds: 300
+        IdentitySource: method.request.header.Authorization
+        Name: Cognito
+        RestApiId: # API id, ref
+          Type: COGNITO_USER_POOLS
+        ProviderARNs:
+          -  # Cognito ARN
+
 custom:
   dynamodb:
     stages:
