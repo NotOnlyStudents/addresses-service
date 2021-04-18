@@ -26,6 +26,13 @@ functions:
           path: addresses
           method: post
           cors: true
+  getAddress:
+    handler: src/endpoints/getAddress.default
+    events:
+      - http:
+          path: addresses/{ID}
+          method: get
+          cors: true      
 
 
 resources:

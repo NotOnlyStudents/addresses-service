@@ -17,9 +17,8 @@ const lambda = (userName: string, eventBody: string, repo: AddressRepository, uu
             repo.addNewAddress(userName, newAddress)
                 .then((addr) => resolve(new AddressResponse(201, addr)))
                 .catch(() => reject(new AddressResponse(500)))
-        } else {
-            reject(new AddressResponse(400));
-        }
+        } else
+            reject(new AddressResponse(400))
     });
 }
 

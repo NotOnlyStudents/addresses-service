@@ -1,8 +1,9 @@
 import { Address } from "src/models/Address";
 import AddressRepository from "./AddressRepository";
 import { DynamoDB } from "aws-sdk";
-import { DataMapper } from "@aws/dynamodb-data-mapper";
-import { annotate } from "src/repository/AddressDynamoDB";
+import { DataMapper, ItemNotFoundException } from "@aws/dynamodb-data-mapper";
+import { AddressWithDynamoAnnotations, annotate, deannotate } from "src/repository/AddressDynamoDB";
+
 
 
 class AddressDynamoRepository implements AddressRepository {
@@ -12,8 +13,24 @@ class AddressDynamoRepository implements AddressRepository {
         this.mapper = new DataMapper({ client: dbConnection });
     }
 
-    addNewAddress(_userId: string, addr: Address): Promise<Address> {
-        return this.mapper.put(annotate(addr)) as Promise<Address>;
+    addNewAddress(userId: string, addr: Address): Promise<Address> {
+        return new Promise((resolve, reject) => {
+            this.mapper
+                .put(annotate(addr, userId))
+                .then((addr) => {
+                    resolve(deannotate(addr));
+                })
+                .catch((err) => reject(err));
+        });
+    }
+
+    getAddress(userId: string, addrId: string): Promise<Address> {
+        return new Promise((resolve, reject) => {
+            this.mapper.get(Object.assign(new AddressWithDynamoAnnotations, { id: addrId }))
+                .then((addr) => { addr.owner === userId ? resolve(deannotate(addr)) : reject({ name: 'ItemNotFoundException' }) })
+                .catch((err) => { reject(err) });
+        });
+
     }
 
 }

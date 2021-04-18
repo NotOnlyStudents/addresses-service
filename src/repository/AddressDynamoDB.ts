@@ -1,10 +1,12 @@
-import { attribute, table, hashKey } from "@aws/dynamodb-data-mapper-annotations";
-import { Address } from "./Address";
+import { attribute, table, hashKey, rangeKey } from "@aws/dynamodb-data-mapper-annotations";
+import { Address } from "src/models/Address";
 
 @table(process.env.ADDRESS_TABLE_NAME)
 class AddressWithDynamoAnnotations implements Address {
   @hashKey()
   id: string
+  @attribute()
+  owner: string
   @attribute()
   nation: string;
   @attribute()
@@ -14,8 +16,9 @@ class AddressWithDynamoAnnotations implements Address {
   @attribute()
   cap: number;
 
-  constructor(id: string = "", nation: string = "", city: string = "", address: string = "", cap: number = 0) {
+  constructor(id: string = "", owner: string = "", nation: string = "", city: string = "", address: string = "", cap: number = 0) {
     this.id = id;
+    this.owner = owner;
     this.nation = nation;
     this.city = city;
     this.address = address;
@@ -23,8 +26,13 @@ class AddressWithDynamoAnnotations implements Address {
   }
 }
 
-const annotate = (addr: Address): AddressWithDynamoAnnotations => {
-  return new AddressWithDynamoAnnotations(addr.id, addr.nation, addr.city, addr.address, addr.cap);
+const annotate = (addr: Address, owner: string): AddressWithDynamoAnnotations => {
+  return new AddressWithDynamoAnnotations(addr.id, owner, addr.nation, addr.city, addr.address, addr.cap);
 }
 
-export { AddressWithDynamoAnnotations, annotate }; 
+const deannotate = (dynamoAddr: AddressWithDynamoAnnotations): Address => {
+  delete dynamoAddr.owner;
+  return dynamoAddr as Address;
+}
+
+export { AddressWithDynamoAnnotations, annotate, deannotate }; 

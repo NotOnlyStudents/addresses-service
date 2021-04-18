@@ -9,7 +9,7 @@
         ],
         "AttributeDefinitions": [
             {
-                "AttributeName": "ID",
+                "AttributeName": "id",
                 "AttributeType": "S"
             }
         ],
