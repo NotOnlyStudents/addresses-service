@@ -14,11 +14,10 @@ const lambda = (userName: string, addrId: string, eventBody: string, repo: Addre
         const newAddress = { ...object, id: addrId } as Address;
         if (!(uuidV4Regex.test(addrId) && instanceOfAddress(newAddress)))
             reject(new AddressResponse(400));
-        else {
+        else
             repo.updateAddress(userName, newAddress)
-                .then((addr) => resolve(new AddressResponse(201, addr)))
-                .catch((err) => { reject(new AddressResponse('code' in err && err.name === 'ConditionalCheckFailedException' ? 404 : 500)) })
-        }
+                .then((addr) => resolve(new AddressResponse(200, addr)))
+                .catch((err) => reject(new AddressResponse('code' in err && err.name === 'ConditionalCheckFailedException' ? 404 : 500)))
     });
 }
 export default lambda;

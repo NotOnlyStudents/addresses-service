@@ -34,7 +34,7 @@ interface AddressRepository {
      * @param addrIdg UUID of an address
      * @returns the deleted address
      */
-    // deleteAddress(userId: string, addrId: string): Promise<Address>;
+    deleteAddress(userId: string, addrId: string): Promise<Address>;
 }
 
 export default AddressRepository;

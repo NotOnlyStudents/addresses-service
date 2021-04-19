@@ -1,7 +1,7 @@
 import { Address } from "src/models/Address";
 import AddressRepository from "./AddressRepository";
 import { DynamoDB } from "aws-sdk";
-import { DataMapper, UpdateOptions } from "@aws/dynamodb-data-mapper";
+import { DataMapper, DeleteOptions, UpdateOptions } from "@aws/dynamodb-data-mapper";
 import { ConditionExpression, equals } from "@aws/dynamodb-expressions"
 import { AddressWithDynamoAnnotations, annotate, deannotate } from "src/repository/AddressDynamoDB";
 
@@ -16,7 +16,6 @@ class AddressDynamoRepository implements AddressRepository {
 
     addNewAddress(userId: string, addr: Address): Promise<Address> {
         return new Promise((resolve, reject) => {
-            console.log(annotate(addr, userId))
             this.mapper
                 .put(annotate(addr, userId))
                 .then((addr) => resolve(deannotate(addr)))
@@ -26,7 +25,8 @@ class AddressDynamoRepository implements AddressRepository {
 
     getAddress(userId: string, addrId: string): Promise<Address> {
         return new Promise((resolve, reject) => {
-            this.mapper.get(Object.assign(new AddressWithDynamoAnnotations, { id: addrId }))
+            this.mapper
+                .get(Object.assign(new AddressWithDynamoAnnotations, { id: addrId }))
                 .then((addr) => { addr.owner === userId ? resolve(deannotate(addr)) : reject({ name: 'ItemNotFoundException' }) })
                 .catch((err) => { reject(err) });
         });
@@ -42,13 +42,24 @@ class AddressDynamoRepository implements AddressRepository {
                 } as ConditionExpression,
                 onMissing: "remove"
             }
-            console.log("Repo: " + userId)
-            this.mapper.update(annotate(addr, userId), options)
+            this.mapper
+                .update(annotate(addr, userId), options)
                 .then((addr) => resolve(deannotate(addr)))
-                .catch((err) => { console.log(err); reject(err) });
+                .catch((err) => reject(err));
         });
     }
 
+    deleteAddress(userId: string, addrId: string): Promise<Address> {
+        const conditionExpression = equals(userId);
+        const options: DeleteOptions = {
+            condition: {
+                ...conditionExpression,
+                subject: "owner"
+            } as ConditionExpression
+        }
+        return this.mapper
+            .delete(Object.assign(new AddressWithDynamoAnnotations, { id: addrId }), options)
+    }
 }
 
 export default AddressDynamoRepository;

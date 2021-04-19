@@ -40,6 +40,13 @@ functions:
           path: addresses/{ID}
           method: patch
           cors: true        
+  deleteAddress:
+    handler: src/endpoints/deleteAddress.default
+    events:
+      - http:
+          path: addresses/{ID}
+          method: delete
+          cors: true        
 
 
 resources:
