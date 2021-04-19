@@ -48,6 +48,7 @@
   "dependencies": {
     "@aws/dynamodb-data-mapper": "^0.7.3",
     "@aws/dynamodb-data-mapper-annotations": "^0.7.3",
+    "@aws/dynamodb-expressions": "^0.7.3",
     "@curveball/http-errors": "^0.4.0",
     "@types/uuid": "^8.3.0",
     "aws-sdk": "^2.846.0",

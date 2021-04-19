@@ -13,7 +13,7 @@ import getAddress from "src/lambdas/getAddress";
 const handler: Handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
     const dynamoConfig: ClientConfiguration = parseDocument(readFile(process.env.DYNAMODB_CONFIG_FILE_PATH, 'utf-8')).toJSON();
     const repo = new AddressDynamoRepository(new DynamoDB(dynamoConfig));
-    return getAddress("", event.pathParameters.ID, repo);
+    return getAddress("utente?", event.pathParameters.ID, repo);
 }
 
 export default handler;

@@ -27,7 +27,7 @@ interface AddressRepository {
      * @param addr Address to substitute
      * @returns A promise of a copy of the updated address
      */
-    // updateAddress(userId: string, addr: Address): Promise<Address>;
+    updateAddress(userId: string, addr: Address): Promise<Address>;
 
     /**
      * @param userId UUID that identifies the user

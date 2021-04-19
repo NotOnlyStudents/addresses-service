@@ -1,6 +1,5 @@
 interface Address {
   id: string;
-  owner: string;
   nation: string;
   city: string;
   address: string;
