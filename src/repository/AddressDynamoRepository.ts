@@ -1,9 +1,9 @@
-import { Address } from "src/models/Address";
-import AddressRepository from "./AddressRepository";
-import { DynamoDB } from "aws-sdk";
-import { DataMapper, DeleteOptions, UpdateOptions } from "@aws/dynamodb-data-mapper";
-import { ConditionExpression, equals } from "@aws/dynamodb-expressions"
-import { AddressWithDynamoAnnotations, annotate, deannotate } from "src/repository/AddressDynamoDB";
+import { Address } from "src/models/Address"
+import AddressRepository from "./AddressRepository"
+import { DynamoDB } from "aws-sdk"
+import { DataMapper, UpdateOptions } from "@aws/dynamodb-data-mapper"
+import { AddressWithDynamoAnnotations, annotate, deannotate } from "src/repository/AddressDynamoDB"
+import { equals, } from "@aws/dynamodb-expressions"
 
 
 
@@ -11,55 +11,51 @@ class AddressDynamoRepository implements AddressRepository {
     readonly mapper: DataMapper
 
     constructor(dbConnection: DynamoDB) {
-        this.mapper = new DataMapper({ client: dbConnection });
+        this.mapper = new DataMapper({ client: dbConnection })
     }
 
-    addNewAddress(userId: string, addr: Address): Promise<Address> {
-        return new Promise((resolve, reject) => {
-            this.mapper
-                .put(annotate(addr, userId))
-                .then((addr) => resolve(deannotate(addr)))
-                .catch((err) => reject(err));
-        });
+    async addNewAddress(userId: string, addr: Address): Promise<Address> {
+        return deannotate(await this.mapper.put(annotate(addr, userId)))
     }
 
-    getAddress(userId: string, addrId: string): Promise<Address> {
-        return new Promise((resolve, reject) => {
-            this.mapper
-                .get(Object.assign(new AddressWithDynamoAnnotations, { id: addrId }))
-                .then((addr) => { addr.owner === userId ? resolve(deannotate(addr)) : reject({ name: 'ItemNotFoundException' }) })
-                .catch((err) => { reject(err) });
-        });
-    }
-
-    updateAddress(userId: string, addr: Address): Promise<Address> {
-        return new Promise((resolve, reject) => {
-            const conditionExpression = equals(userId);
-            const options: UpdateOptions = {
-                condition: {
-                    ...conditionExpression,
-                    subject: "owner"
-                } as ConditionExpression,
-                onMissing: "remove"
-            }
-            this.mapper
-                .update(annotate(addr, userId), options)
-                .then((addr) => resolve(deannotate(addr)))
-                .catch((err) => reject(err));
-        });
-    }
-
-    deleteAddress(userId: string, addrId: string): Promise<Address> {
-        const conditionExpression = equals(userId);
-        const options: DeleteOptions = {
-            condition: {
-                ...conditionExpression,
-                subject: "owner"
-            } as ConditionExpression
+    async getAddress(userId: string, addrId: string): Promise<Address> {
+        try {
+            const address = await this.mapper.get(Object.assign(new AddressWithDynamoAnnotations, { id: addrId, owner: userId }))
+            return deannotate(address)
+        } catch (err) {
+            if (err.name && err.name === 'ItemNotFoundException')
+                return undefined
+            throw err
         }
-        return this.mapper
-            .delete(Object.assign(new AddressWithDynamoAnnotations, { id: addrId }), options)
+    }
+
+    async updateAddress(userId: string, addr: Address): Promise<Address> {
+        const options: UpdateOptions = {
+            condition: {
+                ...equals(addr),
+                subject: "id"
+            },
+            onMissing: "remove"
+        }
+        try {
+            return deannotate(await this.mapper.update(annotate(addr, userId), options))
+        } catch (err) {
+            if ('code' in err && err.name === 'ConditionalCheckFailedException')
+                return undefined
+            throw err
+        }
+    }
+
+    async deleteAddress(userId: string, addrId: string): Promise<Address> {
+        return this.mapper.delete(Object.assign(new AddressWithDynamoAnnotations, { id: addrId, owner: userId }))
+    }
+
+    async *getAddresses(userId: string): AsyncIterable<Address> {
+        const asyncIterator = this.mapper.query(AddressWithDynamoAnnotations, { owner: userId })
+        for await (const address of asyncIterator) {
+            yield deannotate(address)
+        }
     }
 }
 
-export default AddressDynamoRepository;
+export default AddressDynamoRepository

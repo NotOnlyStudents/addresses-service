@@ -3,11 +3,19 @@
         "TableName": "dev-addresses",
         "KeySchema": [
             {
-                "AttributeName": "id",
+                "AttributeName": "owner",
                 "KeyType": "HASH"
+            },
+            {
+                "AttributeName": "id",
+                "KeyType": "RANGE"
             }
         ],
         "AttributeDefinitions": [
+            {
+                "AttributeName": "owner",
+                "AttributeType": "S"
+            },
             {
                 "AttributeName": "id",
                 "AttributeType": "S"

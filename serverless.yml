@@ -33,6 +33,13 @@ functions:
           path: addresses/{ID}
           method: get
           cors: true
+  getAddresses:
+    handler: src/endpoints/getAddresses.default
+    events:
+      - http:
+          path: addresses
+          method: get
+          cors: true
   updateAddress:
     handler: src/endpoints/updateAddress.default
     events:
@@ -56,11 +63,15 @@ resources:
       Properties:
         TableName: ${self:provider.environment.ADDRESS_TABLE_NAME}
         AttributeDefinitions:
+          - AttributeName: owner
+            AttributeType: S
           - AttributeName: id
             AttributeType: S
         KeySchema:
-          - AttributeName: id
+          - AttributeName: owner
             KeyType: HASH
+          - AttributeName: id
+            KeyType: RANGE
         ProvisionedThroughput:
           ReadCapacityUnits: 5
           WriteCapacityUnits: 5
