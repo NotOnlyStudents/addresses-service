@@ -6,7 +6,7 @@ class AddressResponse implements APIGatewayProxyResult {
     readonly statusCode: number;
     readonly body: string;
 
-    constructor(statusCode: number, body?: Address) {
+    constructor(statusCode: number, body?: Address | Address[]) {
         this.statusCode = statusCode;
         this.body = JSON.stringify({ data: body });
     }

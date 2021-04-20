@@ -3,7 +3,7 @@
         "TableName": "dev-addresses",
         "KeySchema": [
             {
-                "AttributeName": "owner",
+                "AttributeName": "username",
                 "KeyType": "HASH"
             },
             {
@@ -13,7 +13,7 @@
         ],
         "AttributeDefinitions": [
             {
-                "AttributeName": "owner",
+                "AttributeName": "username",
                 "AttributeType": "S"
             },
             {

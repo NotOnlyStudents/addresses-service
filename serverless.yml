@@ -63,12 +63,12 @@ resources:
       Properties:
         TableName: ${self:provider.environment.ADDRESS_TABLE_NAME}
         AttributeDefinitions:
-          - AttributeName: owner
+          - AttributeName: username
             AttributeType: S
           - AttributeName: id
             AttributeType: S
         KeySchema:
-          - AttributeName: owner
+          - AttributeName: username
             KeyType: HASH
           - AttributeName: id
             KeyType: RANGE
