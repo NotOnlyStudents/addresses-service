@@ -10,11 +10,16 @@ import { DynamoDB } from "aws-sdk"
 import { ClientConfiguration } from "aws-sdk/clients/dynamodb"
 import { readFileSync as readFile } from 'fs'
 import addAddress from "src/lambdas/addAddress"
+import AddressResponse from "src/models/AddressResponse"
 
 const handler: Handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
     const dynamoConfig: ClientConfiguration = parseDocument(readFile(process.env.DYNAMODB_CONFIG_FILE_PATH, 'utf-8')).toJSON()
     const repo = new AddressDynamoRepository(new DynamoDB(dynamoConfig))
-    return addAddress("utente", event.body, repo, v4)
+    const userName = event.requestContext.authorizer.claims['conito:username'] as string
+    const userGroups = event.requestContext.authorizer.claims['conito:groups'] as string[]
+    if (userGroups.includes("buyers"))
+        return addAddress(userName, event.body, repo, v4)
+    return new AddressResponse(401)
 }
 
 export default handler
