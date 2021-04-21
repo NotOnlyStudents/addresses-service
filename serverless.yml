@@ -25,7 +25,17 @@ custom:
     basePath: ${self:provider.stage}
     stage: ${self:provider.stage}
     createRoute53Record: true
-
+  dynamodb:
+    stages:
+      - dev
+    start:
+      port: 8000
+      inMemory: true
+      migrate: true
+      seed: true
+      convertEmptyValues: true
+    migration:
+      dir: ./offline
 functions:
   addAddress:
     handler: src/endpoints/addAddress.default
@@ -34,7 +44,11 @@ functions:
           path: addresses
           method: post
           cors: true
+          integration: lambda
           authorizer: 
+            type: COGNITO_USER_POOLS
+            authorizerId:
+              Ref: ApiGatewayAuthorizer
   getAddress:
     handler: src/endpoints/getAddress.default
     events:
@@ -42,6 +56,10 @@ functions:
           path: addresses/{ID}
           method: get
           cors: true
+          authorizer: 
+            type: COGNITO_USER_POOLS
+            authorizerId:
+              Ref: ApiGatewayAuthorizer
   getAddresses:
     handler: src/endpoints/getAddresses.default
     events:
@@ -49,6 +67,10 @@ functions:
           path: addresses
           method: get
           cors: true
+          authorizer: 
+            type: COGNITO_USER_POOLS
+            authorizerId:
+              Ref: ApiGatewayAuthorizer
   updateAddress:
     handler: src/endpoints/updateAddress.default
     events:
@@ -56,6 +78,10 @@ functions:
           path: addresses/{ID}
           method: patch
           cors: true        
+          authorizer: 
+            type: COGNITO_USER_POOLS
+            authorizerId:
+              Ref: ApiGatewayAuthorizer
   deleteAddress:
     handler: src/endpoints/deleteAddress.default
     events:
@@ -63,6 +89,10 @@ functions:
           path: addresses/{ID}
           method: delete
           cors: true        
+          authorizer: 
+            type: COGNITO_USER_POOLS
+            authorizerId:
+              Ref: ApiGatewayAuthorizer
 
 resources:
   Resources:
@@ -83,16 +113,16 @@ resources:
         ProvisionedThroughput:
           ReadCapacityUnits: 5
           WriteCapacityUnits: 5
+
+    ApiGatewayAuthorizer:
+      Type: AWS::ApiGateway::Authorizer
+      Properties:
+        AuthorizerResultTtlInSeconds: 300
+        IdentitySource: method.request.header.Authorization
+        Name: ${self:provider.stage}-address-authorizer
+        RestApiId:
+          Ref: ApiGatewayRestApi
+        Type: COGNITO_USER_POOLS
+        ProviderARNs:
+          -  !ImportValue ${self:provider.stage}-user-pool-arn 
     
-custom:
-  dynamodb:
-    stages:
-      - dev
-    start:
-      port: 8000
-      inMemory: true
-      migrate: true
-      seed: true
-      convertEmptyValues: true
-    migration:
-      dir: ./offline
