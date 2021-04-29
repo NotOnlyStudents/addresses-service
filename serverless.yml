@@ -8,30 +8,23 @@ provider:
   runtime: nodejs12.x
   stage: ${opt:stage, "dev"}
   lambdaHashingVersion: 20201221
+  environment:
+    DYNAMODB_CONFIG_FILE_PATH: configs/${self:provider.stage}-dynamo.yml
+    ADDRESS_TABLE_NAME: ${self:provider.stage}-addresses
 
 plugins:
   - serverless-webpack
   - serverless-dynamodb-local
   - serverless-dynamodb-seed
   - serverless-offline
+  - serverless-domain-manager
 
-resources:
-  Resources:
-    AddressesTable:
-      Type: AWS::DynamoDB::Table
-      Properties:
-        TableName: ${self:provider.stage}-addresses
-        AttributeDefinitions:
-          - AttributeName: ID
-            AttributeType: S
-        KeySchema:
-          - AttributeName: ID
-            KeyType: HASH
-        ProvisionedThroughput:
-          ReadCapacityUnits: 5
-          WriteCapacityUnits: 5
-         
 custom:
+  customDomain:
+    domainName: api.annoiato.net
+    basePath: ${self:provider.stage}
+    stage: ${self:provider.stage}
+    createRoute53Record: true
   dynamodb:
     stages:
       - dev
@@ -43,3 +36,93 @@ custom:
       convertEmptyValues: true
     migration:
       dir: ./offline
+functions:
+  addAddress:
+    handler: src/endpoints/addAddress.default
+    events:
+      - http:
+          path: addresses
+          method: post
+          cors: true
+          integration: lambda
+          authorizer: 
+            type: COGNITO_USER_POOLS
+            authorizerId:
+              Ref: ApiGatewayAuthorizer
+  getAddress:
+    handler: src/endpoints/getAddress.default
+    events:
+      - http:
+          path: addresses/{ID}
+          method: get
+          cors: true
+          authorizer: 
+            type: COGNITO_USER_POOLS
+            authorizerId:
+              Ref: ApiGatewayAuthorizer
+  getAddresses:
+    handler: src/endpoints/getAddresses.default
+    events:
+      - http:
+          path: addresses
+          method: get
+          cors: true
+          authorizer: 
+            type: COGNITO_USER_POOLS
+            authorizerId:
+              Ref: ApiGatewayAuthorizer
+  updateAddress:
+    handler: src/endpoints/updateAddress.default
+    events:
+      - http:
+          path: addresses/{ID}
+          method: patch
+          cors: true        
+          authorizer: 
+            type: COGNITO_USER_POOLS
+            authorizerId:
+              Ref: ApiGatewayAuthorizer
+  deleteAddress:
+    handler: src/endpoints/deleteAddress.default
+    events:
+      - http:
+          path: addresses/{ID}
+          method: delete
+          cors: true        
+          authorizer: 
+            type: COGNITO_USER_POOLS
+            authorizerId:
+              Ref: ApiGatewayAuthorizer
+
+resources:
+  Resources:
+    AddressesTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:provider.environment.ADDRESS_TABLE_NAME}
+        AttributeDefinitions:
+          - AttributeName: username
+            AttributeType: S
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: username
+            KeyType: HASH
+          - AttributeName: id
+            KeyType: RANGE
+        ProvisionedThroughput:
+          ReadCapacityUnits: 5
+          WriteCapacityUnits: 5
+
+    ApiGatewayAuthorizer:
+      Type: AWS::ApiGateway::Authorizer
+      Properties:
+        AuthorizerResultTtlInSeconds: 300
+        IdentitySource: method.request.header.Authorization
+        Name: ${self:provider.stage}-address-authorizer
+        RestApiId:
+          Ref: ApiGatewayRestApi
+        Type: COGNITO_USER_POOLS
+        ProviderARNs:
+          -  !ImportValue ${self:provider.stage}-user-pool-arn 
+    

@@ -1,17 +1,29 @@
 {
     "Table": {
         "TableName": "dev-addresses",
-        "KeySchema": [{
-            "AttributeName": "ID",
-            "KeyType": "HASH"
-        }],
-        "AttributeDefinitions": [{
-            "AttributeName": "ID",
-            "AttributeType": "S"
-        }],
+        "KeySchema": [
+            {
+                "AttributeName": "username",
+                "KeyType": "HASH"
+            },
+            {
+                "AttributeName": "id",
+                "KeyType": "RANGE"
+            }
+        ],
+        "AttributeDefinitions": [
+            {
+                "AttributeName": "username",
+                "AttributeType": "S"
+            },
+            {
+                "AttributeName": "id",
+                "AttributeType": "S"
+            }
+        ],
         "ProvisionedThroughput": {
             "ReadCapacityUnits": 1,
             "WriteCapacityUnits": 1
-        }          
+        }
     }
 }
