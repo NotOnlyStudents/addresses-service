@@ -44,7 +44,6 @@ functions:
           path: addresses
           method: post
           cors: true
-          integration: lambda
           authorizer: 
             type: COGNITO_USER_POOLS
             authorizerId:

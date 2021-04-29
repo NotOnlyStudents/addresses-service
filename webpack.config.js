@@ -51,8 +51,9 @@ module.exports = {
   },
   plugins: [
     new CopyPlugin({
-      patterns: [
-        'configs/' + (slsw.lib.webpack.isLocal ? 'dev' : slsw.lib.options.stage) + '-dynamo.yml'
-      ]
+      patterns: [{
+        from: 'configs/' + (slsw.lib.webpack.isLocal ? 'dev' : slsw.lib.options.stage) + '-dynamo.yml',
+        to: 'configs/' + (slsw.lib.webpack.isLocal ? 'dev' : slsw.lib.options.stage) + '-dynamo.yml'
+      }]
     })],
 };
