@@ -17,14 +17,8 @@ plugins:
   - serverless-dynamodb-local
   - serverless-dynamodb-seed
   - serverless-offline
-  - serverless-domain-manager
 
 custom:
-  customDomain:
-    domainName: api.annoiato.net
-    basePath: ${self:provider.stage}
-    stage: ${self:provider.stage}
-    createRoute53Record: true
   dynamodb:
     stages:
       - dev
