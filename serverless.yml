@@ -11,6 +11,20 @@ provider:
   environment:
     DYNAMODB_CONFIG_FILE_PATH: configs/${self:provider.stage}-dynamo.yml
     ADDRESS_TABLE_NAME: ${self:provider.stage}-addresses
+  apiGateway:
+    shouldStartNameWithService: true
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - dynamodb:Query
+            - dynamodb:Scan
+            - dynamodb:GetItem
+            - dynamodb:PutItem
+            - dynamodb:UpdateItem
+            - dynamodb:DeleteItem
+          Resource: '*' 
 
 plugins:
   - serverless-webpack
@@ -18,30 +32,17 @@ plugins:
   - serverless-dynamodb-seed
   - serverless-offline
 
-custom:
-  webpack:
-    webpackConfig: ./webpack.config.js
-    includeModules: true
-  dynamodb:
-    stages:
-      - dev
-    start:
-      port: 8000
-      inMemory: true
-      migrate: true
-      seed: true
-      convertEmptyValues: true
-    migration:
-      dir: ./offline
+package:
+  individually: true
+
 functions:
   addAddress:
     handler: src/endpoints/addAddress.default
     events:
       - http:
           path: addresses
-          method: post
+          method: POST
           cors: true
-          integration: LAMBDA
           authorizer: 
             type: COGNITO_USER_POOLS
             authorizerId:
@@ -51,9 +52,8 @@ functions:
     events:
       - http:
           path: addresses/{ID}
-          method: get
+          method: GET
           cors: true
-          integration: LAMBDA
           authorizer: 
             type: COGNITO_USER_POOLS
             authorizerId:
@@ -63,9 +63,8 @@ functions:
     events:
       - http:
           path: addresses
-          method: get
+          method: GET
           cors: true
-          integration: LAMBDA
           authorizer: 
             type: COGNITO_USER_POOLS
             authorizerId:
@@ -75,7 +74,7 @@ functions:
     events:
       - http:
           path: addresses/{ID}
-          method: patch
+          method: PATCH
           cors: true        
           integration: LAMBDA
           authorizer: 
@@ -87,13 +86,28 @@ functions:
     events:
       - http:
           path: addresses/{ID}
-          method: delete
+          method: DELETE
           cors: true        
           integration: LAMBDA
           authorizer: 
             type: COGNITO_USER_POOLS
             authorizerId:
               Ref: ApiGatewayAuthorizer
+custom:
+  webpack:
+    webpackConfig: ./webpack.config.js
+    includeModules: true
+  dynamodb:
+    stages:
+      - local
+    start:
+      port: 8000
+      inMemory: true
+      migrate: true
+      seed: true
+      convertEmptyValues: true
+    migration:
+      dir: ./offline
 
 resources:
   Resources:
