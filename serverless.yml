@@ -41,6 +41,7 @@ functions:
           path: addresses
           method: post
           cors: true
+          integration: LAMBDA
           authorizer: 
             type: COGNITO_USER_POOLS
             authorizerId:
@@ -52,6 +53,7 @@ functions:
           path: addresses/{ID}
           method: get
           cors: true
+          integration: LAMBDA
           authorizer: 
             type: COGNITO_USER_POOLS
             authorizerId:
@@ -63,6 +65,7 @@ functions:
           path: addresses
           method: get
           cors: true
+          integration: LAMBDA
           authorizer: 
             type: COGNITO_USER_POOLS
             authorizerId:
@@ -74,6 +77,7 @@ functions:
           path: addresses/{ID}
           method: patch
           cors: true        
+          integration: LAMBDA
           authorizer: 
             type: COGNITO_USER_POOLS
             authorizerId:
@@ -85,6 +89,7 @@ functions:
           path: addresses/{ID}
           method: delete
           cors: true        
+          integration: LAMBDA
           authorizer: 
             type: COGNITO_USER_POOLS
             authorizerId:
