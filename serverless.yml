@@ -76,7 +76,6 @@ functions:
           path: addresses/{ID}
           method: PATCH
           cors: true        
-          integration: LAMBDA
           authorizer: 
             type: COGNITO_USER_POOLS
             authorizerId:
@@ -88,7 +87,6 @@ functions:
           path: addresses/{ID}
           method: DELETE
           cors: true        
-          integration: LAMBDA
           authorizer: 
             type: COGNITO_USER_POOLS
             authorizerId:
