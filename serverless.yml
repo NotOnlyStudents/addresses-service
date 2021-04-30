@@ -19,6 +19,9 @@ plugins:
   - serverless-offline
 
 custom:
+  webpack:
+    webpackConfig: ./webpack.config.js
+    includeModules: true
   dynamodb:
     stages:
       - dev
