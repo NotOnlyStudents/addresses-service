@@ -97,7 +97,7 @@ custom:
     includeModules: true
   dynamodb:
     stages:
-      - local
+      - dev
     start:
       port: 8000
       inMemory: true

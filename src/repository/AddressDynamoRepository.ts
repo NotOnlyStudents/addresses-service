@@ -34,7 +34,7 @@ class AddressDynamoRepository implements AddressRepository {
   async updateAddress(userId: string, addr: Address): Promise<Address> {
     const options: UpdateOptions = {
       condition: {
-        ...equals(addr),
+        ...equals(addr.id),
         subject: 'id',
       },
       onMissing: 'remove',
