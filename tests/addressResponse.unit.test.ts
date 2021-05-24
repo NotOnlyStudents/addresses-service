@@ -1,14 +1,14 @@
-import { Address } from "src/models/Address";
+import { Address } from 'src/models/Address';
 import AddressResponse from '../src/models/AddressResponse';
 
-describe("Check the address response", () => {
-  it("Valid address response", () => {
+describe('Check the address response', () => {
+  it('Valid address response', () => {
     const address: Address = {
       id: '1',
       nation: 'Italy',
       city: 'Rome',
       address: 'Via Cavour, 10',
-      cap: 40145
+      cap: 40145,
     };
 
     const responseAddress = new AddressResponse(200, address);

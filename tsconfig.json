@@ -14,7 +14,7 @@
     },
     "include": [
         "src/**/*.ts",
-        "tests/**/*.ts"
+        "tests/*.ts"
     ],
     "exclude": [
         "node_modules/**/*",
@@ -22,5 +22,6 @@
         ".webpack/**/*",
         "_warmup/**/*",
         ".vscode/**/*",
+        "coverage/**/*"
     ]
 }
