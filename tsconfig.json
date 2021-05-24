@@ -21,7 +21,6 @@
         ".serverless/**/*",
         ".webpack/**/*",
         "_warmup/**/*",
-        ".vscode/**/*",
-        "coverage/**/*"
+        ".vscode/**/*"
     ]
 }
