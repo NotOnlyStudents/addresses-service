@@ -13,7 +13,8 @@
         "outDir": "lib"
     },
     "include": [
-        "src/**/*.ts"
+        "src/**/*.ts",
+        "tests/**/*.ts"
     ],
     "exclude": [
         "node_modules/**/*",
@@ -21,6 +22,5 @@
         ".webpack/**/*",
         "_warmup/**/*",
         ".vscode/**/*",
-        "tests/**/*"
     ]
 }
