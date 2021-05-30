@@ -2,6 +2,7 @@ const path = require('path');
 const slsw = require('serverless-webpack');
 const nodeExternals = require('webpack-node-externals');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
+const CopyPlugin = require('copy-webpack-plugin');
 
 module.exports = {
   context: __dirname,
@@ -48,5 +49,11 @@ module.exports = {
       },
     ],
   },
-  plugins: [],
+  plugins: [
+    new CopyPlugin({
+      patterns: [{
+        from: 'configs/' + (slsw.lib.webpack.isLocal ? 'dev' : slsw.lib.options.stage) + '-dynamo.yml',
+        to: 'configs/' + (slsw.lib.webpack.isLocal ? 'dev' : slsw.lib.options.stage) + '-dynamo.yml'
+      }]
+    })],
 };
