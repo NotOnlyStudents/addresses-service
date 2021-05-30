@@ -22,7 +22,7 @@ provider:
             - dynamodb:PutItem
             - dynamodb:UpdateItem
             - dynamodb:DeleteItem
-          Resource: '*' 
+          Resource: "*"
 
 plugins:
   - serverless-webpack
@@ -30,21 +30,6 @@ plugins:
   - serverless-dynamodb-seed
   - serverless-offline
 
-<<<<<<< HEAD
-resources:
-  Resources:
-    ApiGatewayAuthorizer:
-      Type: AWS::ApiGateway::Authorizer
-      Properties:
-        AuthorizerResultTtlInSeconds: 300
-        IdentitySource: method.request.header.Authorization
-        Name: Cognito
-        RestApiId: # API id, ref
-          Type: COGNITO_USER_POOLS
-        ProviderARNs:
-          -  # Cognito ARN
-
-=======
 package:
   individually: true
 
@@ -56,7 +41,7 @@ functions:
           path: addresses
           method: POST
           cors: true
-          authorizer: 
+          authorizer:
             type: COGNITO_USER_POOLS
             authorizerId:
               Ref: ApiGatewayAuthorizer
@@ -67,7 +52,7 @@ functions:
           path: addresses/{ID}
           method: GET
           cors: true
-          authorizer: 
+          authorizer:
             type: COGNITO_USER_POOLS
             authorizerId:
               Ref: ApiGatewayAuthorizer
@@ -78,7 +63,7 @@ functions:
           path: addresses
           method: GET
           cors: true
-          authorizer: 
+          authorizer:
             type: COGNITO_USER_POOLS
             authorizerId:
               Ref: ApiGatewayAuthorizer
@@ -88,8 +73,8 @@ functions:
       - http:
           path: addresses/{ID}
           method: PATCH
-          cors: true        
-          authorizer: 
+          cors: true
+          authorizer:
             type: COGNITO_USER_POOLS
             authorizerId:
               Ref: ApiGatewayAuthorizer
@@ -99,12 +84,11 @@ functions:
       - http:
           path: addresses/{ID}
           method: DELETE
-          cors: true        
-          authorizer: 
+          cors: true
+          authorizer:
             type: COGNITO_USER_POOLS
             authorizerId:
               Ref: ApiGatewayAuthorizer
->>>>>>> release/v1.0.0
 custom:
   webpack:
     webpackConfig: ./webpack.config.js
@@ -151,5 +135,4 @@ resources:
           Ref: ApiGatewayRestApi
         Type: COGNITO_USER_POOLS
         ProviderARNs:
-          -  !ImportValue ${self:provider.stage}-user-pool-arn 
-    
+          - !ImportValue ${self:provider.stage}-user-pool-arn
